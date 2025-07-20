@@ -12,7 +12,7 @@
 		static void Main()
 		{
 			string startDB = "ChessCamp_Startof2025.accdb";
-			string endDB = @"Camp 2025_Wk2.accdb";
+			string endDB = @"Camp 2025_Wk4.accdb";
 
 
 			(string, string)[] tables = [
