@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SCAAccessTools
 {
-	record CamperInfoAddition(int PlayerID, string LastName, string FirstName, int Grade, string SchoolCode, string Level, bool Promoted, bool SCATournament, bool New, bool[] weeks, string Notes, string SwimLevel, string SwimComments, bool YESphoto, string PhotoComments, string Extras)
+	record CamperInfoAddition(int SCAID, string LastName, string FirstName, int Grade, string SchoolCode, string Level, bool Promoted, bool SCATournament, bool New, bool[] weeks, string Notes, string SwimLevel, string SwimComments, bool YESphoto, string PhotoComments, string Extras, int ContactInfoID, decimal? CamperPaid, bool Teeshirt, decimal Discount)
 	{
 		public static IEnumerable<CamperInfoAddition> GetAll(string week)
 		{
@@ -17,22 +17,34 @@ namespace SCAAccessTools
 			foreach (var row in rows)
 			{
 				yield return new CamperInfoAddition(
-					PlayerID: int.Parse(row[0]),
-					LastName: row[1],
-					FirstName: row[2],
-					Grade: int.Parse(row[3]),
-					SchoolCode: row[4],
-					Level: row[5],
-					Promoted: bool.Parse(row[6]),
-					SCATournament: bool.Parse(row[7]),
-					New: bool.Parse(row[8]),
-					weeks: row.Values[10..17].Select(x => bool.Parse(x)).ToArray(),
-					Notes: row[21],
-					SwimLevel: Program.NormalizeSwimLevel(row[22]),
-					SwimComments: row[23],
-					YESphoto: bool.Parse(row[24]),
-					PhotoComments: row[25],
-					Extras: row[22]
+					SCAID: int.Parse(row["ID"]),
+					LastName: row["Last Name"],
+					FirstName: row["First Name"],
+					Grade: int.Parse(row["Grade"]),
+					SchoolCode: row["SchoolCode"],
+					Level: row["Level"],
+					Promoted: bool.Parse(row["Promoted/Demoted"]),
+					SCATournament: bool.Parse(row["SCATournaments"]),
+					New: bool.Parse(row["new"]),
+					weeks: [
+						bool.Parse(row["1"]),
+						bool.Parse(row["2"]),
+						bool.Parse(row["3"]),
+						bool.Parse(row["4"]),
+						bool.Parse(row["5"]),
+						bool.Parse(row["6"]),
+						bool.Parse(row["7"]),
+					],
+					Notes: row["Notes"],
+					SwimLevel: Program.NormalizeSwimLevel(row["SwimLevel"]),
+					SwimComments: row["SwimmingComments"],
+					YESphoto: bool.Parse(row["YESphoto"]),
+					PhotoComments: row["PhotoComments"],
+					Extras: row["Extras"],
+					ContactInfoID: int.Parse(row["ID"]),
+					CamperPaid: decimal.TryParse(row["CamperPaid"], out decimal camperPaid) ? camperPaid : null,
+					Teeshirt: bool.Parse(row["Teeshirt"]),
+					Discount: decimal.Parse(row["Discount"])
 				);
 			}
 		}
